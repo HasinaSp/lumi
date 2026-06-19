@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { ThemeToggle } from "../components/theme-toggle";
+import Link from "next/link";
+import { Navbar } from "../components/navbar";
 
 const services = [
   "Audit UberEats",
@@ -13,10 +15,66 @@ const services = [
   "QR menu",
 ];
 
+const plans = [
+  {
+    name: "Audit Simple",
+    price: "Gratuite",
+    href: "/audit/simple",
+    badge: "Idéal pour commencer",
+    description:
+      "Un diagnostic rapide de votre fiche UberEats ou Deliveroo avec les points prioritaires à corriger.",
+    features: [
+      "Score global /100",
+      "Analyse des photos",
+      "Analyse des descriptions",
+      "Vérification des prix",
+      "Note client & visibilité",
+      "3 recommandations prioritaires",
+      "Rapport PDF synthétique",
+    ],
+  },
+  {
+    name: "Audit Complet",
+    price: "79€",
+    href: "/audit/complet",
+    badge: "Le plus recommandé",
+    description:
+      "Une analyse détaillée de votre présence sur UberEats ou Deliveroo avec comparaison concurrentielle.",
+    features: [
+      "Score global détaillé /100",
+      "Qualité des photos",
+      "Descriptions & menu engineering",
+      "Prix vs concurrence locale",
+      "Temps de préparation",
+      "Analyse des notes clients",
+      "Visibilité & positionnement",
+      "Rapport PDF professionnel",
+    ],
+  },
+  {
+    name: "Accompagnement",
+    price: "199€/mois",
+    href: "/audit/accompagnement",
+    badge: "Croissance continue",
+    description:
+      "Un suivi mensuel pour améliorer vos performances, tester des optimisations et suivre vos résultats.",
+    features: [
+      "Audit mensuel UberEats / Deliveroo",
+      "Suivi du score LUMI",
+      "Optimisation continue du menu",
+      "Recommandations prix & offres",
+      "Conseils photos & descriptions",
+      "Suivi concurrence",
+      "Compte-rendu PDF mensuel",
+      "Support prioritaire",
+    ],
+  },
+];  
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f7f3] text-neutral-950 transition-colors dark:bg-black dark:text-white">
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+      {/* <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="relative h-[110px] w-[110px]">
           <Image
             src="/lumi-logo/lumi-logo-light-vector.svg"
@@ -36,13 +94,19 @@ export default function Home() {
             className="hidden dark:block"
           />
         </div>
-
         <nav className="hidden gap-8 text-sm md:flex">
           <a
             href="#services"
             className="text-neutral-700 transition hover:text-black dark:text-neutral-300 dark:hover:text-white"
           >
             Services
+          </a>
+
+          <a
+            href="#offres"
+            className="text-neutral-700 transition hover:text-black dark:text-neutral-300 dark:hover:text-white"
+          >
+            Offres
           </a>
 
           <a
@@ -61,12 +125,12 @@ export default function Home() {
         </nav>
 
         <ThemeToggle />
-      </header>
-
+      </header> */}
+      <Navbar />
       <section className="mx-auto grid min-h-[80vh] max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-2">
         <div>
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">
-            Saas pour restaurateurs
+            HIKARI LUMI
           </p>
 
           <h1 className="text-5xl font-semibold leading-tight md:text-7xl">
@@ -74,9 +138,9 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-8 text-neutral-600 dark:text-neutral-400">
-            LUMI aide les restaurateurs à améliorer leurs ventes, leur image et
+            LUMI revèle le potentiel caché des restaurateurs et les aide à améliorer leurs ventes, leur image et
             leur présence digitale grâce à des audits, optimisations et outils
-            simples à mettre en place.
+            simples à mettre en place, pour rayonner.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -155,15 +219,15 @@ export default function Home() {
 
           <div className="mt-10 grid gap-8 md:grid-cols-3">
             {[
-              ["01", "Audit", "Analyse de votre présence actuelle."],
-              ["02", "Plan d’action", "Priorités claires pour progresser."],
-              ["03", "Optimisation", "Mise en place des améliorations."],
+              ["1", "Audit", "Analyse de votre présence actuelle."],
+              ["2", "Plan d’action", "Priorités claires pour progresser."],
+              ["3", "Optimisation", "Mise en place des améliorations."],
             ].map(([number, title, text]) => (
               <div
                 key={title}
-                className="rounded-3xl border border-white/10 p-8"
+                className="rounded-3xl border border-white/50 p-8"
               >
-                <span className="text-neutral-500">{number}</span>
+                <span className="text-neutral-500 rounded-full bg-white px-3 py-1">{number}</span>
 
                 <h3 className="mt-6 text-2xl font-medium">{title}</h3>
 
@@ -171,6 +235,58 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="offres" className="mx-auto max-w-7xl px-6 py-24">
+        <p className="text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">
+          Offres d’audit
+        </p>
+
+        <h2 className="mt-4 max-w-3xl text-4xl font-semibold md:text-5xl">
+          Un rapport clair pour savoir exactement quoi améliorer.
+        </h2>
+
+        <p className="mt-6 max-w-2xl text-neutral-600 dark:text-neutral-400">
+          Chaque audit LUMI analyse votre présence sur UberEats ou Deliveroo :
+          photos, descriptions, prix, concurrence, visibilité, avis clients et
+          recommandations concrètes.
+        </p>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {plans.map((plan) => (
+            <div
+              key={plan.name}
+              className="relative rounded-3xl bg-white p-8 shadow-sm dark:bg-neutral-900"
+            >
+              <span className="rounded-full bg-orange-100 px-4 py-2 text-xs font-medium uppercase tracking-widest text-orange-700">
+                {plan.badge}
+              </span>
+
+              <h3 className="mt-8 text-2xl font-semibold">{plan.name}</h3>
+
+              <p className="mt-4 text-4xl font-bold">{plan.price}</p>
+
+              <p className="mt-4 text-neutral-600 dark:text-neutral-400">
+                {plan.description}
+              </p>
+
+              <ul className="mt-8 space-y-3">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="text-neutral-700 dark:text-neutral-300">
+                    ✓ {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href={plan.href}
+                className="mt-8 inline-block rounded-full bg-black px-6 py-3 text-sm uppercase tracking-widest text-white dark:bg-white dark:text-black"
+              >
+                Demander cette offre
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -188,7 +304,7 @@ export default function Home() {
         </p>
 
         <a
-          href="mailto:contact@expertplace.fr"
+          href="mailto:speyerhasina@gmail.com"
           className="mt-10 inline-block rounded-full bg-black px-8 py-4 text-sm uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black"
         >
           Contacter LUMI
