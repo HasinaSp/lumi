@@ -14,7 +14,24 @@ const services = [
   "Community management",
   "QR menu",
 ];
-
+const foodImages = [
+  {
+    title: "Burger premium",
+    image: "/food/burger2.jpg",
+  },
+  {
+    title: "Chicken burger",
+    image: "/food/burger3.jpg",
+  },
+  {
+    title: "Mozzarella sticks",
+    image: "/food/mozza-sticks1.jpg",
+  },
+  {
+    title: "Tacos",
+    image: "/food/tacos1.png",
+  },
+];
 const plans = [
   {
     name: "Audit Simple",
@@ -74,58 +91,6 @@ const plans = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f7f3] text-neutral-950 transition-colors dark:bg-black dark:text-white">
-      {/* <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        <div className="relative h-[110px] w-[110px]">
-          <Image
-            src="/lumi-logo/lumi-logo-light-vector.svg"
-            alt="Logo LUMI"
-            width={110}
-            height={110}
-            priority
-            className="block dark:hidden"
-          />
-
-          <Image
-            src="/lumi-logo/lumi-logo-dark-vector.svg"
-            alt="Logo LUMI"
-            width={110}
-            height={110}
-            priority
-            className="hidden dark:block"
-          />
-        </div>
-        <nav className="hidden gap-8 text-sm md:flex">
-          <a
-            href="#services"
-            className="text-neutral-700 transition hover:text-black dark:text-neutral-300 dark:hover:text-white"
-          >
-            Services
-          </a>
-
-          <a
-            href="#offres"
-            className="text-neutral-700 transition hover:text-black dark:text-neutral-300 dark:hover:text-white"
-          >
-            Offres
-          </a>
-
-          <a
-            href="#process"
-            className="text-neutral-700 transition hover:text-black dark:text-neutral-300 dark:hover:text-white"
-          >
-            Méthode
-          </a>
-
-          <a
-            href="#contact"
-            className="text-neutral-700 transition hover:text-black dark:text-neutral-300 dark:hover:text-white"
-          >
-            Contact
-          </a>
-        </nav>
-
-        <ThemeToggle />
-      </header> */}
       <Navbar />
       <section className="mx-auto grid min-h-[80vh] max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-2">
         <div>
@@ -160,27 +125,27 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="rounded-[2rem] bg-white p-8 shadow-sm dark:bg-neutral-900">
-          <p className="text-sm uppercase tracking-[0.3em] text-neutral-400">
-            Diagnostic digital
-          </p>
+        <div className="relative overflow-hidden rounded-[2rem] bg-white p-3 shadow-sm dark:bg-neutral-900">
+          <Image
+            src="/food/burger1.jpg"
+            alt="Burger premium analysé par LUMI"
+            width={700}
+            height={700}
+            className="h-[520px] w-full rounded-[1.5rem] object-cover"
+            priority
+          />
 
-          <div className="mt-8 space-y-5">
-            {[
-              "Votre menu est-il optimisé ?",
-              "Vos photos donnent-elles envie ?",
-              "Vos prix sont-ils cohérents ?",
-              "Êtes-vous visible face aux concurrents ?",
-            ].map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl border border-neutral-200 p-5 dark:border-neutral-700"
-              >
-                {item}
-              </div>
-            ))}
+          <div className="absolute bottom-6 left-6 rounded-2xl bg-white/90 p-5 shadow-lg backdrop-blur dark:bg-black/80">
+            <p className="text-sm uppercase tracking-widest text-neutral-500">
+              Score photo
+            </p>
+            <p className="mt-2 text-4xl font-bold">92/100</p>
+            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
+              Photo attractive et professionnelle
+            </p>
           </div>
         </div>
+
       </section>
 
       <section id="services" className="mx-auto max-w-7xl px-6 py-24">
@@ -237,7 +202,44 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <p className="text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">
+          Photos & appétence
+        </p>
 
+        <h2 className="mt-4 max-w-3xl text-4xl font-semibold md:text-5xl">
+          Sur UberEats et Deliveroo, vos photos vendent avant vos descriptions.
+        </h2>
+
+        <p className="mt-6 max-w-2xl text-neutral-600 dark:text-neutral-400">
+          LUMI analyse la qualité visuelle de vos plats : lumière, netteté, cadrage,
+          appétence, cohérence et potentiel de conversion.
+        </p>
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {foodImages.map((item) => (
+            <div
+              key={item.title}
+              className="group overflow-hidden rounded-3xl bg-white p-3 shadow-sm dark:bg-neutral-900"
+            >
+              <Image
+                src={item.image}
+                alt={item.title}
+                width={500}
+                height={500}
+                className="h-72 w-full rounded-2xl object-cover transition duration-500 group-hover:scale-105"
+              />
+
+              <div className="p-4">
+                <h3 className="font-medium">{item.title}</h3>
+                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                  Analyse de l’impact visuel et des points d’amélioration.
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
       <section id="offres" className="mx-auto max-w-7xl px-6 py-24">
         <p className="text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">
           Offres d’audit
