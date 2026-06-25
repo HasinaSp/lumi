@@ -17,11 +17,11 @@ const services = [
 const foodImages = [
   {
     title: "Burger premium",
-    image: "/food/burger2.jpg",
+    image: "/food/burger3.jpg",
   },
   {
     title: "Chicken burger",
-    image: "/food/burger3.jpg",
+    image: "/food/burger2.jpg",
   },
   {
     title: "Mozzarella sticks",
