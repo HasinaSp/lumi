@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { ThemeToggle } from "../components/theme-toggle";
 import Link from "next/link";
 import { Navbar } from "../components/navbar";
+import { ThemeToggle } from "../components/theme-toggle";
+
 
 const services = [
   "Audit UberEats",
@@ -91,6 +92,7 @@ const plans = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f7f3] text-neutral-950 transition-colors dark:bg-black dark:text-white">
+      <ThemeToggle />
       <Navbar />
       <section className="mx-auto grid min-h-[80vh] max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-2">
         <div>
@@ -239,6 +241,52 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <div className="grid gap-10 rounded-[2rem] bg-white p-8 shadow-sm dark:bg-neutral-900 md:grid-cols-2 md:p-12">
+          <div>
+            <p className="text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">
+              Exemple de rapport
+            </p>
+
+            <h2 className="mt-4 text-4xl font-semibold md:text-5xl">
+              Un score clair pour comprendre vos points forts et vos faiblesses.
+            </h2>
+
+            <p className="mt-6 text-neutral-600 dark:text-neutral-400">
+              Chaque audit LUMI vous donne un score global sur 100, accompagné de
+              recommandations concrètes pour améliorer votre fiche UberEats ou
+              Deliveroo.
+            </p>
+          </div>
+            <div className="rounded-3xl border border-neutral-200 p-6 dark:border-neutral-700">
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="text-sm uppercase tracking-widest text-neutral-500">
+                    Score LUMI™
+                  </p>
+                  <p className="mt-2 text-6xl font-bold">84</p>
+                </div>
+                <p className="text-2xl font-semibold text-neutral-500">/100</p>
+              </div>
+
+              <div className="mt-8 space-y-4">
+                {[
+                  ["Photos", "22/25"],
+                  ["Menu", "18/20"],
+                  ["Prix", "13/15"],
+                  ["Visibilité", "12/15"],
+                  ["Avis clients", "9/15"],
+                  ["Concurrence", "10/10"],
+                ].map(([label, score]) => (
+                  <div key={label} className="flex justify-between border-b border-neutral-200 pb-3 dark:border-neutral-700">
+                    <span>{label}</span>
+                    <span className="font-medium">{score}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
       </section>
       <section id="offres" className="mx-auto max-w-7xl px-6 py-24">
         <p className="text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">

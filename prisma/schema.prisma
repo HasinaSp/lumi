@@ -4,8 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -13,16 +12,56 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  role      Role     @default(CLIENT)
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         Role     @default(CLIENT)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  auditRequests AuditRequest[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AuditRequest {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  restaurantName String
+  city           String?
+  platform       Platform
+  offer          AuditOffer
+  status         AuditStatus @default(PENDING)
+
+  marketplaceUrl String?
+  message        String?
+  reportUrl      String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum Role {
   ADMIN
   CLIENT
+}
+
+enum Platform {
+  UBEREATS
+  DELIVEROO
+  BOTH
+}
+
+enum AuditOffer {
+  SIMPLE
+  COMPLETE
+  MONTHLY
+}
+
+enum AuditStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
 }
