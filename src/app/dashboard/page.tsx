@@ -1,9 +1,14 @@
-import { auth, signOut } from "../../auth";
+import { auth, signOut } from "../../lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await auth();
 
+  if (!session?.user) {
+    redirect("/login"); 
+  }
+  
   return (
     <main className="min-h-screen bg-[#f8f7f3] px-6 py-10 text-neutral-950">
       <section className="mx-auto max-w-6xl">

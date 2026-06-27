@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "../components/navbar";
-import { ThemeToggle } from "../components/theme-toggle";
 
 
 const services = [
@@ -92,7 +91,6 @@ const plans = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f7f3] text-neutral-950 transition-colors dark:bg-black dark:text-white">
-      <ThemeToggle />
       <Navbar />
       <section className="mx-auto grid min-h-[80vh] max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-2">
         <div>

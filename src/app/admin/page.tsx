@@ -1,8 +1,17 @@
-import { auth, signOut } from "../../auth";
+import { auth, signOut } from "../../lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
   const session = await auth();
 
+  if (!session?.user) {
+    redirect("/login"); 
+  }
+
+  if (session?.user?.email !== process.env.ADMIN_EMAIL) {
+    redirect("/dashboard");
+  }
+  
   return (
     <main className="min-h-screen bg-neutral-950 px-6 py-10 text-white">
       <section className="mx-auto max-w-7xl">

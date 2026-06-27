@@ -1,7 +1,7 @@
 // app/login/page.tsx
 import Image from "next/image";
 import Link from "next/link";
-import { signIn } from "../../auth";
+import { signIn } from "../../lib/auth";
 
 export default function LoginPage() {
   return (
