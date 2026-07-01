@@ -1,12 +1,46 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import { prisma } from "./prisma";
+import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { prisma } from "../lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
+
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: {},
+        password: {},
+      },
+
+      async authorize(credentials) {
+        const email = String(credentials?.email ?? "").toLowerCase();
+        const password = String(credentials?.password ?? "");
+
+        if (!email || !password) return null;
+
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
+
+        if (!user || !user.passwordHash) return null;
+
+        const isValid = await bcrypt.compare(password, user.passwordHash);
+
+        if (!isValid) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+      },
     }),
   ],
 
@@ -15,52 +49,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") return true;
       if (!user.email) return false;
 
       const email = user.email.toLowerCase();
 
-      try {
-        const existingUser = await prisma.user.findUnique({
-          where: { email },
-        });
-
-        if (existingUser) {
-          await prisma.user.update({
-            where: { email },
-            data: {
-              name: user.name ?? existingUser.name,
-            },
-          });
-
-          return true;
-        }
-
-        await prisma.user.create({
-          data: {
-            email,
-            name: user.name,
-            role: email === process.env.ADMIN_EMAIL?.toLowerCase()
+      await prisma.user.upsert({
+        where: { email },
+        update: {
+          name: user.name,
+        },
+        create: {
+          email,
+          name: user.name,
+          role:
+            email === process.env.ADMIN_EMAIL?.toLowerCase()
               ? "ADMIN"
               : "CLIENT",
-          },
-        });
+        },
+      });
 
-        return true;
-      } catch (error) {
-        console.error("Erreur signIn Auth.js:", error);
-        return false;
-        // throw error;
-      }
+      return true;
     },
 
     async session({ session }) {
       if (!session.user?.email) return session;
 
-      const email = session.user.email.toLowerCase();
-
       const dbUser = await prisma.user.findUnique({
-        where: { email },
+        where: { email: session.user.email.toLowerCase() },
       });
 
       if (dbUser) {

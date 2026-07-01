@@ -25,6 +25,29 @@ model User {
   updatedAt    DateTime @updatedAt
 }
 
+model AuditReport {
+  id        String   @id @default(cuid())
+
+  auditId   String   @unique
+  audit     AuditRequest @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  scoreGlobal     Int      @default(0)
+
+  summary         String?
+
+  strengths       String?
+  improvements    String?
+  recommendations String?
+
+  photosScore     Int @default(0)
+  menuScore       Int @default(0)
+  pricingScore    Int @default(0)
+  seoScore        Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model AuditRequest {
   id             String      @id @default(cuid())
   userId         String
@@ -35,10 +58,12 @@ model AuditRequest {
   platform       Platform
   offer          AuditOffer
   status         AuditStatus @default(PENDING)
+  report         AuditReport?
 
   marketplaceUrl String?
   message        String?
   reportUrl      String?
+  htmlReport     String?
 
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
