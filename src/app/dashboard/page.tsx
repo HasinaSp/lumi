@@ -3,10 +3,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
+import { auditStatusClass, formatAuditStatus } from "src/lib/format";
 
 export default async function DashboardPage() {
   const session = await auth();
-
+  
   if (!session?.user?.email) {
     redirect("/login");
   }
@@ -105,8 +106,8 @@ export default async function DashboardPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="rounded-full bg-neutral-100 px-4 py-2 text-sm">
-                        {audit.status}
+                      <span className={`rounded-full px-4 py-2 text-sm ${auditStatusClass(audit.status)}`}>
+                        {formatAuditStatus(audit.status)}
                       </span>
 
                       <Link

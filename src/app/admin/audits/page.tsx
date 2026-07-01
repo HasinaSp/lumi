@@ -1,6 +1,7 @@
 // src/app/admin/audits/page.tsx
 import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
+import { formatAuditStatus } from "src/lib/format";
 
 export default async function AdminAuditsPage() {
   const audits = await prisma.auditRequest.findMany({
@@ -41,7 +42,7 @@ export default async function AdminAuditsPage() {
                     <td className="py-4 font-medium">{audit.restaurantName}</td>
                     <td>{audit.user.email}</td>
                     <td>{audit.offer}</td>
-                    <td>{audit.status}</td>
+                    <td>{formatAuditStatus(audit.status)}</td>
                     <td>{audit.createdAt.toLocaleDateString("fr-FR")}</td>
                     <td className="text-right">
                       <Link

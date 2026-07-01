@@ -1,6 +1,7 @@
 import { auth, signOut } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { redirect } from "next/navigation";
+import { formatAuditStatus } from "src/lib/format";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -133,7 +134,7 @@ export default async function AdminPage() {
 
                       <td>{audit.offer}</td>
 
-                      <td>{audit.status}</td>
+                      <td>{formatAuditStatus(audit.status)}</td>
 
                       <td>
                         {audit.createdAt.toLocaleDateString("fr-FR")}

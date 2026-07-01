@@ -42,8 +42,9 @@ export default function LoginPage() {
       >
         <button
           type="submit"
-          className="mt-8 w-full rounded-full bg-black px-6 py-4 text-sm uppercase tracking-widest text-white"
+          className="mt-8 w-full rounded-full px-6 py-4 text-sm uppercase tracking-widest text-neutral-500"
         >
+          <img src="/google-logo/google.png" alt="logo" className="inline-block h-5 w-5 mr-2" />
           Continuer avec Google
         </button>
       </form>
@@ -89,7 +90,7 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="w-full rounded-full bg-neutral-900 px-6 py-4 text-sm uppercase tracking-widest text-white"
+          className="w-full rounded-full bg-gray-500 px-6 py-4 text-sm uppercase tracking-widest text-white"
         >
           Se connecter
         </button>
@@ -97,7 +98,7 @@ export default function LoginPage() {
 
       <p className="mt-6 text-center text-sm text-neutral-500">
         Pas encore de compte ?{" "}
-        <Link href="/register" className="font-medium text-black">
+        <Link href="/register" className="font-medium text-orange-500">
           Créer un compte
         </Link>
       </p>

@@ -47,8 +47,12 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ThemeToggle />
-
+          <Link
+            href="/login"
+            className="rounded-full bg-emerald-500 px-5 py-3 text-xs uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black sm:inline-block"
+          >
+            Se connecter
+          </Link>
           <Link
             href="#offres"
             className="hidden rounded-full bg-black px-5 py-3 text-xs uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black sm:inline-block"

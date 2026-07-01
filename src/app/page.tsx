@@ -16,8 +16,8 @@ const services = [
 ];
 const foodImages = [
   {
-    title: "Burger premium",
-    image: "/food/burger3.jpg",
+    title: "Pizza Pepperoni",
+    image: "/food/pizza2.jpg",
   },
   {
     title: "Chicken burger",
@@ -111,7 +111,7 @@ export default function Home() {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
               href="#contact"
-              className="rounded-full bg-black px-8 py-4 text-center text-sm uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black"
+              className="rounded-full bg-gray-500 px-8 py-4 text-center text-sm uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black"
             >
               Demander un audit
             </a>
@@ -139,7 +139,7 @@ export default function Home() {
             <p className="text-sm uppercase tracking-widest text-neutral-500">
               Score photo
             </p>
-            <p className="mt-2 text-4xl font-bold">92/100</p>
+            <p className="mt-2 text-4xl text-orange-500 font-bold">92/100</p>
             <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
               Photo attractive et professionnelle
             </p>
@@ -192,7 +192,7 @@ export default function Home() {
                 key={title}
                 className="rounded-3xl border border-white/50 p-8"
               >
-                <span className="text-neutral-500 rounded-full bg-white px-3 py-1">{number}</span>
+                <span className="text-neutral-500 bg-emerald-500 rounded-full px-3 py-1">{number}</span>
 
                 <h3 className="mt-6 text-2xl font-medium">{title}</h3>
 
@@ -307,7 +307,7 @@ export default function Home() {
               key={plan.name}
               className="relative rounded-3xl bg-white p-8 shadow-sm dark:bg-neutral-900"
             >
-              <span className="rounded-full bg-orange-100 px-4 py-2 text-xs font-medium uppercase tracking-widest text-orange-700">
+              <span className="rounded-full bg-blue-100 px-4 py-2 text-xs font-medium uppercase tracking-widest text-blue-700">
                 {plan.badge}
               </span>
 
@@ -329,7 +329,7 @@ export default function Home() {
 
               <Link
                 href={plan.href}
-                className="mt-8 inline-block rounded-full bg-black px-6 py-3 text-sm uppercase tracking-widest text-white dark:bg-white dark:text-black"
+                className="mt-8 inline-block rounded-full bg-gray-500 px-6 py-3 text-sm uppercase tracking-widest text-white dark:bg-white dark:text-black"
               >
                 Demander cette offre
               </Link>
