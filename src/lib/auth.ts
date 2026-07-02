@@ -59,10 +59,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         where: { email },
         update: {
           name: user.name,
+          image: user.image,
         },
         create: {
           email,
           name: user.name,
+          image: user.image,
           role:
             email === process.env.ADMIN_EMAIL?.toLowerCase()
               ? "ADMIN"

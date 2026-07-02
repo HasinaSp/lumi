@@ -10,6 +10,7 @@
     "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
+    "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@prisma/client": "^6.19.0",
     "@react-email/components": "^1.0.12",
     "bcryptjs": "^3.0.3",

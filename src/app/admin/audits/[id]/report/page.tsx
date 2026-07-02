@@ -73,7 +73,7 @@ async function saveReport(formData: FormData) {
     );
 
     await resend.emails.send({
-      from: "LUMI <onboarding@resend.dev>",
+      from: "LUMI <audit@lumi-hikari.com>",
       to: existingAudit.user.email,
       subject: "Votre rapport LUMI est disponible",
       html,
