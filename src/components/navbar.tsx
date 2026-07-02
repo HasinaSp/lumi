@@ -21,7 +21,7 @@ export function Navbar() {
             width={90}
             height={90}
             priority
-            className="block dark:hidden"
+            className="block dark:hidden rounded-full"
           />
 
           <Image
@@ -30,7 +30,7 @@ export function Navbar() {
             width={90}
             height={90}
             priority
-            className="hidden dark:block"
+            className="hidden dark:block rounded-full"
           />
         </Link>
 

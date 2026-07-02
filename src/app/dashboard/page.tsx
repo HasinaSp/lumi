@@ -31,7 +31,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-neutral-500">
-              Dashboard client
+              Dashboard
             </p>
             <h1 className="mt-3 text-4xl font-semibold">
               Bonjour {user.name ?? "Client"}

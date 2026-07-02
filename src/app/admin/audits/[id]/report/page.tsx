@@ -1,25 +1,44 @@
 // src/app/admin/audits/[id]/report/page.tsx
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { prisma } from "../../../../../lib/prisma";
+import { prisma } from "src/lib/prisma";
+import { resend } from "src/lib/resend";
+import { render } from "@react-email/components";
+import AuditCompletedEmail from "src/emails/AuditCompleteEmail";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+function getNumber(formData: FormData, key: string) {
+  return Number(formData.get(key) ?? 0);
+}
 
 async function saveReport(formData: FormData) {
   "use server";
 
   const auditId = String(formData.get("auditId"));
 
+  const existingAudit = await prisma.auditRequest.findUnique({
+    where: { id: auditId },
+    include: {
+      user: true,
+      report: true,
+    },
+  });
+
+  if (!existingAudit) {
+    throw new Error("Audit introuvable");
+  }
+
   await prisma.auditReport.upsert({
     where: { auditId },
     update: {
-      scoreGlobal: Number(formData.get("scoreGlobal")),
-      photosScore: Number(formData.get("photosScore")),
-      menuScore: Number(formData.get("menuScore")),
-      pricingScore: Number(formData.get("pricingScore")),
-      seoScore: Number(formData.get("seoScore")),
+      scoreGlobal: getNumber(formData, "scoreGlobal"),
+      photosScore: getNumber(formData, "photosScore"),
+      menuScore: getNumber(formData, "menuScore"),
+      pricingScore: getNumber(formData, "pricingScore"),
+      seoScore: getNumber(formData, "seoScore"),
       summary: String(formData.get("summary") ?? ""),
       strengths: String(formData.get("strengths") ?? ""),
       improvements: String(formData.get("improvements") ?? ""),
@@ -27,11 +46,11 @@ async function saveReport(formData: FormData) {
     },
     create: {
       auditId,
-      scoreGlobal: Number(formData.get("scoreGlobal")),
-      photosScore: Number(formData.get("photosScore")),
-      menuScore: Number(formData.get("menuScore")),
-      pricingScore: Number(formData.get("pricingScore")),
-      seoScore: Number(formData.get("seoScore")),
+      scoreGlobal: getNumber(formData, "scoreGlobal"),
+      photosScore: getNumber(formData, "photosScore"),
+      menuScore: getNumber(formData, "menuScore"),
+      pricingScore: getNumber(formData, "pricingScore"),
+      seoScore: getNumber(formData, "seoScore"),
       summary: String(formData.get("summary") ?? ""),
       strengths: String(formData.get("strengths") ?? ""),
       improvements: String(formData.get("improvements") ?? ""),
@@ -43,6 +62,23 @@ async function saveReport(formData: FormData) {
     where: { id: auditId },
     data: { status: "COMPLETED" },
   });
+
+  if (!existingAudit.report && existingAudit.user.email) {
+    const html = await render(
+      <AuditCompletedEmail
+        clientName={existingAudit.user.name ?? "Client"}
+        restaurantName={existingAudit.restaurantName}
+        reportUrl={`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/audits/${existingAudit.id}`}
+      />
+    );
+
+    await resend.emails.send({
+      from: "LUMI <onboarding@resend.dev>",
+      to: existingAudit.user.email,
+      subject: "Votre rapport LUMI est disponible",
+      html,
+    });
+  }
 
   redirect(`/admin/audits/${auditId}`);
 }
@@ -86,7 +122,9 @@ export default async function AdminAuditReportPage({ params }: PageProps) {
                 min="0"
                 max="100"
                 defaultValue={
-                  audit.report?.[name as keyof typeof audit.report] as number ?? 0
+                  (audit.report?.[
+                    name as keyof typeof audit.report
+                  ] as number) ?? 0
                 }
                 className="mt-2 w-full rounded-2xl border border-white/10 bg-neutral-950 px-4 py-3 text-white"
               />
@@ -100,13 +138,16 @@ export default async function AdminAuditReportPage({ params }: PageProps) {
           ["improvements", "Axes d’amélioration"],
           ["recommendations", "Recommandations"],
         ].map(([name, label]) => (
-          <label key={name} className="block">
+          <label key={name} className="block" htmlFor={name}>
             <span className="text-sm text-neutral-400">{label}</span>
             <textarea
+              id={name}
               name={name}
               rows={6}
               defaultValue={
-                (audit.report?.[name as keyof typeof audit.report] as string) ?? ""
+                (audit.report?.[
+                  name as keyof typeof audit.report
+                ] as string) ?? ""
               }
               className="mt-2 w-full rounded-3xl border border-white/10 bg-neutral-950 p-5 text-white"
             />

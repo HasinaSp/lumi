@@ -7,13 +7,20 @@ const services = [
   "Audit UberEats",
   "Optimisation de menu",
   "Analyse des prix",
-  "Analyse des concurrents",
   "Optimisation de visibilité",
-  "Campagnes emailing",
-  "Site web restaurant",
-  "Community management",
+  "Optimisation des photos des plats",
   "QR menu",
 ];
+
+const texts = {
+  "auditubereats": "Un audit complet de votre présence sur UberEats ou Deliveroo, avec un rapport clair et des recommandations concrètes.",
+  "optimisationdemenu": "Une optimisation de votre menu pour améliorer la conversion, la lisibilité et l’attractivité de vos plats.",
+  "analysedesprix": "Une analyse des prix de vos plats par rapport à la concurrence locale, avec des recommandations pour maximiser vos ventes.",
+  "optimisationdevisibilité": "Une optimisation de votre visibilité sur UberEats ou Deliveroo, avec des conseils pour améliorer votre positionnement et votre référencement.",
+  "optimisationdesphotosdesplats": "Une optimisation de vos photos de plats pour améliorer l’attrait visuel et la conversion.",
+  "qrmenu": "Un QR menu interactif pour faciliter la commande et améliorer l’expérience client.",
+};
+
 const foodImages = [
   {
     title: "Pizza Pepperoni",
@@ -36,7 +43,7 @@ const plans = [
   {
     name: "Audit Simple",
     price: "Gratuite",
-    href: "/audit/simple",
+    href: "/audit/new?offer=SIMPLE",
     badge: "Idéal pour commencer",
     description:
       "Un diagnostic rapide de votre fiche UberEats ou Deliveroo avec les points prioritaires à corriger.",
@@ -53,7 +60,7 @@ const plans = [
   {
     name: "Audit Complet",
     price: "79€",
-    href: "/audit/complet",
+    href: "/audit/new?offer=COMPLETE",
     badge: "Le plus recommandé",
     description:
       "Une analyse détaillée de votre présence sur UberEats ou Deliveroo avec comparaison concurrentielle.",
@@ -71,7 +78,7 @@ const plans = [
   {
     name: "Accompagnement",
     price: "199€/mois",
-    href: "/audit/accompagnement",
+    href: "/audit/new?offer=MONTHLY",
     badge: "Croissance continue",
     description:
       "Un suivi mensuel pour améliorer vos performances, tester des optimisations et suivre vos résultats.",
@@ -109,12 +116,12 @@ export default function Home() {
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <a
-              href="#contact"
+            <Link
+              href="#offres"
               className="rounded-full bg-gray-500 px-8 py-4 text-center text-sm uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black"
             >
               Demander un audit
-            </a>
+            </Link>
 
             <a
               href="#services"
@@ -166,7 +173,7 @@ export default function Home() {
               <h3 className="text-xl font-medium">{service}</h3>
 
               <p className="mt-3 text-neutral-600 dark:text-neutral-400">
-                Une solution claire, actionnable et adaptée aux restaurateurs.
+                {texts[service.toLowerCase().replace(/\s+/g, "") as keyof typeof texts]}
               </p>
             </div>
           ))}

@@ -24,7 +24,7 @@ export default async function AdminLayout({
         <aside className="border-r border-white/10 p-6">
           <Link href="/" className="text-2xl font-semibold tracking-[0.25em]">
             <span className="inline-flex flex-1 gap-2 justify-center font-bold text-white">            
-                <img src="/lumi-logo/lumi-logo-dark-vector.svg" alt="logo" className="h-12 w-12" />
+                <img src="/lumi-logo/lumi-logo-dark-vector.svg" alt="logo" className="h-12 w-12 rounded-full" />
                 LUMI
             </span>
           </Link>

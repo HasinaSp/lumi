@@ -1,7 +1,26 @@
-// src/app/audit/new/page.tsx
 import { auth } from "../../../lib/auth";
 import { prisma } from "../../../lib/prisma";
 import { redirect } from "next/navigation";
+
+type NewAuditPageProps = {
+  searchParams: Promise<{
+    offer?: string;
+  }>;
+};
+
+function getSelectedOffer(offer?: string) {
+  if (offer === "COMPLETE" || offer === "MONTHLY" || offer === "SIMPLE") {
+    return offer;
+  }
+
+  return "SIMPLE";
+}
+
+function getOfferLabel(offer: string) {
+  if (offer === "COMPLETE") return "Audit Complet — 79€";
+  if (offer === "MONTHLY") return "Accompagnement mensuel — 199€/mois";
+  return "Audit Simple";
+}
 
 async function createAuditRequest(formData: FormData) {
   "use server";
@@ -42,12 +61,17 @@ async function createAuditRequest(formData: FormData) {
   redirect("/dashboard");
 }
 
-export default async function NewAuditPage() {
+export default async function NewAuditPage({
+  searchParams,
+}: NewAuditPageProps) {
   const session = await auth();
 
   if (!session?.user) {
     redirect("/login");
   }
+
+  const { offer } = await searchParams;
+  const selectedOffer = getSelectedOffer(offer);
 
   return (
     <main className="min-h-screen bg-[#f8f7f3] px-6 py-10 text-neutral-950">
@@ -60,7 +84,17 @@ export default async function NewAuditPage() {
           Demander un audit LUMI
         </h1>
 
-        <form action={createAuditRequest} className="mt-10 space-y-4 rounded-3xl bg-white p-8 shadow-sm">
+        <form
+          action={createAuditRequest}
+          className="mt-10 space-y-4 rounded-3xl bg-white p-8 shadow-sm"
+        >
+          <input type="hidden" name="offer" value={selectedOffer} />
+
+          <div className="rounded-2xl bg-neutral-100 p-4 text-sm text-neutral-700">
+            Offre sélectionnée :{" "}
+            <strong>{getOfferLabel(selectedOffer)}</strong>
+          </div>
+
           <input
             name="restaurantName"
             required
@@ -81,15 +115,6 @@ export default async function NewAuditPage() {
             <option value="UBEREATS">Uber Eats</option>
             <option value="DELIVEROO">Deliveroo</option>
             <option value="BOTH">Uber Eats + Deliveroo</option>
-          </select>
-
-          <select
-            name="offer"
-            className="w-full rounded-2xl border border-neutral-300 bg-white px-5 py-4 text-neutral-900 outline-none"
-          >
-            <option value="SIMPLE">Audit Simple — 29€</option>
-            <option value="COMPLETE">Audit Complet — 79€</option>
-            <option value="MONTHLY">Accompagnement mensuel — 199€/mois</option>
           </select>
 
           <input
