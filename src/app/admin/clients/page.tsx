@@ -7,6 +7,7 @@ export default async function AdminClientsPage() {
     orderBy: { createdAt: "desc" },
     include: {
       auditRequests: true,
+      payments: true,
     },
   });
 
@@ -62,6 +63,14 @@ export default async function AdminClientsPage() {
                   <div>
                     <p className="text-neutral-500">Rôle</p>
                     <p>{client.role}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-neutral-500">Paiements</p>
+                    <p>{client.payments.length} Paiement(s)</p>
+                    <p>
+                      {(client.payments.reduce((sum, p) => sum + p.amount, 0) / 100).toFixed(2)}€
+                    </p>
                   </div>
 
                   <div>

@@ -42,6 +42,11 @@ export default async function AdminPage() {
     }),
   ]);
 
+  const revenue = await prisma.payment.aggregate({
+    _sum: { amount: true },
+    where: { status: "paid" },
+  });
+
   return (
     <main className="min-h-screen bg-neutral-950 px-6 py-10 text-white">
       <section className="mx-auto max-w-7xl">
@@ -82,6 +87,7 @@ export default async function AdminPage() {
             ["En attente", pendingAudits],
             ["En cours", inProgressAudits],
             ["Terminés", completedAudits],
+            ["Revenus", `${((revenue._sum.amount ?? 0) / 100).toFixed(2)}€`],
           ].map(([label, value]) => (
             <div
               key={label}

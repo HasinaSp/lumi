@@ -30,6 +30,7 @@ export default async function AdminAuditsPage() {
                   <th className="py-3">Restaurant</th>
                   <th>Client</th>
                   <th>Offre</th>
+                  <th>Paiement</th>
                   <th>Statut</th>
                   <th>Date</th>
                   <th></th>
@@ -42,6 +43,11 @@ export default async function AdminAuditsPage() {
                     <td className="py-4 font-medium">{audit.restaurantName}</td>
                     <td>{audit.user.email}</td>
                     <td>{audit.offer}</td>
+                    <td>
+                      <span className="rounded-full px-3 py-1 text-xs text-green-700 bg-green-100">
+                        Payement confirmé
+                      </span>
+                    </td>
                     <td>{formatAuditStatus(audit.status)}</td>
                     <td>{audit.createdAt.toLocaleDateString("fr-FR")}</td>
                     <td className="text-right">

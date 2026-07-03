@@ -28,6 +28,14 @@ export async function POST(req: Request) {
   const offer = body.offer ?? "SIMPLE";
   const variantId = getVariantId(offer);
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  if (!appUrl) {
+        return NextResponse.json(
+            { error: "App URL not configured" }, 
+            { status: 500 });
+  }
+
   const response = await fetch("https://api.lemonsqueezy.com/v1/checkouts", {
     method: "POST",
     headers: {
@@ -53,7 +61,7 @@ export async function POST(req: Request) {
             },
           },
           product_options: {
-            redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+            redirect_url: `${appUrl}/dashboard`,
           },
         },
         relationships: {

@@ -81,7 +81,7 @@ export default async function DashboardPage() {
               </p>
 
               <Link
-                href="/audit/new"
+                href="/#offres"
                 className="mt-6 inline-block rounded-full bg-black px-6 py-3 text-sm uppercase tracking-widest text-white"
               >
                 Demander un audit
@@ -102,6 +102,9 @@ export default async function DashboardPage() {
                       <p className="mt-1 text-sm text-neutral-500">
                         {audit.offer} · {audit.platform} ·{" "}
                         {audit.createdAt.toLocaleDateString("fr-FR")}
+                      </p>
+                      <p className="mt-1 text-sm text-green-500">
+                        Paiement confirmé
                       </p>
                     </div>
 
