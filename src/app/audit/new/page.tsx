@@ -22,7 +22,7 @@ function getOfferLabel(offer: string) {
   return "Audit Simple";
 }
 
-async function createAuditRequest(formData: FormData) {
+async function startCheckout(formData: FormData) {
   "use server";
 
   const session = await auth();
@@ -46,16 +46,13 @@ async function createAuditRequest(formData: FormData) {
   const marketplaceUrl = String(formData.get("marketplaceUrl") ?? "");
   const message = String(formData.get("message") ?? "");
 
-  await prisma.auditRequest.create({
-    data: {
-      userId: user.id,
-      restaurantName,
-      city,
-      platform: platform as "UBEREATS" | "DELIVEROO" | "BOTH",
-      offer: offer as "SIMPLE" | "COMPLETE" | "MONTHLY",
-      marketplaceUrl,
-      message,
-    },
+  console.log({
+    restaurantName,
+    city,
+    platform,
+    offer,
+    marketplaceUrl,
+    message,
   });
 
   redirect("/dashboard");
@@ -85,7 +82,7 @@ export default async function NewAuditPage({
         </h1>
 
         <form
-          action={createAuditRequest}
+          action={startCheckout}
           className="mt-10 space-y-4 rounded-3xl bg-white p-8 shadow-sm"
         >
           <input type="hidden" name="offer" value={selectedOffer} />
