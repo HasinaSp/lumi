@@ -1,6 +1,29 @@
 // src/app/admin/clients/page.tsx
+"use server";
+
+import { redirect } from "next/navigation";
 import Image from "next/image";
 import { prisma } from "src/lib/prisma";
+import { requireAdmin } from "src/lib/admin";
+
+async function deleteClient(formData: FormData) {
+  "use server";
+
+  const session = await requireAdmin();
+
+  const id = String(formData.get("id"));
+
+  if (id === session.user.id) {
+    throw new Error("Vous ne pouvez pas supprimer votre propre compte.");
+  }
+
+  await prisma.user.delete({
+    where: { id },
+  });
+
+  redirect("/admin/clients");
+}
+
 
 export default async function AdminClientsPage() {
   const clients = await prisma.user.findMany({
@@ -83,6 +106,14 @@ export default async function AdminClientsPage() {
                     <p>{client.createdAt.toLocaleDateString("fr-FR")}</p>
                   </div>
                 </div>
+                <form action={deleteClient}>
+                  <input type="hidden" name="id" value={client.id} />
+
+                  <button className="rounded-full bg-red-600 px-4 py-2 text-xs text-white">
+                    Supprimer
+                  </button>
+                </form>
+
               </div>
             ))}
           </div>

@@ -27,6 +27,19 @@ async function updateStatus(formData: FormData) {
   redirect(`/admin/audits/${id}`);
 }
 
+async function deleteAudit(formData: FormData) {
+  "use server";
+
+  const id = String(formData.get("id"));
+
+  await prisma.auditRequest.delete({
+    where: { id },
+  });
+
+  redirect("/admin/audits");
+}
+
+
 export default async function AdminAuditDetailPage({ params }: PageProps) {
   const { id } = await params;
 
@@ -82,6 +95,16 @@ export default async function AdminAuditDetailPage({ params }: PageProps) {
 
             <button className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black">
               Mettre à jour
+            </button>
+          </form>
+
+          <form action={deleteAudit}>
+            <input type="hidden" name="id" value={audit.id} />
+
+            <button
+              className="rounded-full bg-red-600 px-6 py-3 text-sm font-medium text-white"
+            >
+              Supprimer l’audit
             </button>
           </form>
             <Link
