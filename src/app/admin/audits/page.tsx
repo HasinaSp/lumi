@@ -45,7 +45,7 @@ export default async function AdminAuditsPage() {
                     <td>{audit.offer}</td>
                     <td>
                       <span className="rounded-full px-3 py-1 text-xs text-green-700 bg-green-100">
-                        Payement confirmé
+                        Payé
                       </span>
                     </td>
                     <td>{formatAuditStatus(audit.status)}</td>
