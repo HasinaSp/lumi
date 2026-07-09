@@ -1,4 +1,3 @@
-// src/app/dashboard/page.tsx
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "../../lib/auth";

@@ -1,6 +1,8 @@
-// src/app/admin/audits/[id]/page.tsx
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { requireAdmin } from "src/lib/admin";
 import { prisma } from "../../../../lib/prisma";
 
 type PageProps = {
@@ -41,6 +43,9 @@ async function deleteAudit(formData: FormData) {
 
 
 export default async function AdminAuditDetailPage({ params }: PageProps) {
+
+  await requireAdmin();
+
   const { id } = await params;
 
   const audit = await prisma.auditRequest.findUnique({
@@ -93,12 +98,12 @@ export default async function AdminAuditDetailPage({ params }: PageProps) {
               <option value="COMPLETED">Terminé</option>
             </select>
 
-            <button className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black">
+            <button className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-medium text-white">
               Mettre à jour
             </button>
           </form>
 
-          <form action={deleteAudit}>
+          <form action={deleteAudit} className="mt-4 space-y-2">
             <input type="hidden" name="id" value={audit.id} />
 
             <button

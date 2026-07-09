@@ -1,9 +1,15 @@
-// src/app/admin/audits/page.tsx
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
+import { requireAdmin } from "src/lib/admin";
 import { formatAuditStatus } from "src/lib/format";
 
+
 export default async function AdminAuditsPage() {
+
+  await requireAdmin();
+
   const audits = await prisma.auditRequest.findMany({
     orderBy: { createdAt: "desc" },
     include: { user: true },

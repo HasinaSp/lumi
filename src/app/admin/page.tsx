@@ -1,9 +1,16 @@
+export const dynamic = "force-dynamic";
+
 import { auth, signOut } from "../../lib/auth";
+import { requireAdmin } from "src/lib/admin";
 import { prisma } from "../../lib/prisma";
 import { redirect } from "next/navigation";
 import { formatAuditStatus } from "src/lib/format";
 
+
 export default async function AdminPage() {
+  
+  await requireAdmin();
+
   const session = await auth();
 
   if (!session?.user) {

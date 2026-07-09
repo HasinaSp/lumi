@@ -1,23 +1,43 @@
-// src/app/admin/audits/[id]/report/page.tsx
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { render } from "@react-email/components";
+
+import { requireAdmin } from "src/lib/admin";
 import { prisma } from "src/lib/prisma";
 import { resend } from "src/lib/resend";
-import { render } from "@react-email/components";
-import AuditCompletedEmail from "src/emails/AuditCompleteEmail";
+import { auditReportSchema } from "src/lib/validations";
+import AuditCompletedEmail from "src/emails/AuditCompletedEmail";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-function getNumber(formData: FormData, key: string) {
-  return Number(formData.get(key) ?? 0);
-}
-
 async function saveReport(formData: FormData) {
   "use server";
 
+  await requireAdmin();
+
   const auditId = String(formData.get("auditId"));
+
+  const parsed = auditReportSchema.safeParse({
+    scoreGlobal: formData.get("scoreGlobal"),
+    photosScore: formData.get("photosScore"),
+    menuScore: formData.get("menuScore"),
+    pricingScore: formData.get("pricingScore"),
+    seoScore: formData.get("seoScore"),
+    summary: formData.get("summary"),
+    strengths: formData.get("strengths"),
+    improvements: formData.get("improvements"),
+    recommendations: formData.get("recommendations"),
+  });
+
+  if (!parsed.success) {
+    throw new Error("Données du rapport invalides.");
+  }
+
+  const data = parsed.data;
 
   const existingAudit = await prisma.auditRequest.findUnique({
     where: { id: auditId },
@@ -33,28 +53,10 @@ async function saveReport(formData: FormData) {
 
   await prisma.auditReport.upsert({
     where: { auditId },
-    update: {
-      scoreGlobal: getNumber(formData, "scoreGlobal"),
-      photosScore: getNumber(formData, "photosScore"),
-      menuScore: getNumber(formData, "menuScore"),
-      pricingScore: getNumber(formData, "pricingScore"),
-      seoScore: getNumber(formData, "seoScore"),
-      summary: String(formData.get("summary") ?? ""),
-      strengths: String(formData.get("strengths") ?? ""),
-      improvements: String(formData.get("improvements") ?? ""),
-      recommendations: String(formData.get("recommendations") ?? ""),
-    },
+    update: data,
     create: {
       auditId,
-      scoreGlobal: getNumber(formData, "scoreGlobal"),
-      photosScore: getNumber(formData, "photosScore"),
-      menuScore: getNumber(formData, "menuScore"),
-      pricingScore: getNumber(formData, "pricingScore"),
-      seoScore: getNumber(formData, "seoScore"),
-      summary: String(formData.get("summary") ?? ""),
-      strengths: String(formData.get("strengths") ?? ""),
-      improvements: String(formData.get("improvements") ?? ""),
-      recommendations: String(formData.get("recommendations") ?? ""),
+      ...data,
     },
   });
 
@@ -84,6 +86,8 @@ async function saveReport(formData: FormData) {
 }
 
 export default async function AdminAuditReportPage({ params }: PageProps) {
+  await requireAdmin();
+
   const { id } = await params;
 
   const audit = await prisma.auditRequest.findUnique({

@@ -1,4 +1,3 @@
-// src/app/redirect/page.tsx
 import { auth } from "../../lib/auth";
 import { redirect } from "next/navigation";
 

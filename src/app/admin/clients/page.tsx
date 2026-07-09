@@ -1,5 +1,4 @@
-// src/app/admin/clients/page.tsx
-"use server";
+export const dynamic = "force-dynamic";
 
 import { redirect } from "next/navigation";
 import Image from "next/image";
@@ -10,11 +9,23 @@ async function deleteClient(formData: FormData) {
   "use server";
 
   const session = await requireAdmin();
-
+  
   const id = String(formData.get("id"));
 
   if (id === session.user.id) {
     throw new Error("Vous ne pouvez pas supprimer votre propre compte.");
+  }
+
+  const userToDelete = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!userToDelete) {
+    throw new Error("Utilisateur introuvable.");
+  }
+
+  if (userToDelete.role === "ADMIN") {
+    throw new Error("Impossible de supprimer un compte administrateur.");
   }
 
   await prisma.user.delete({
@@ -24,9 +35,9 @@ async function deleteClient(formData: FormData) {
   redirect("/admin/clients");
 }
 
-
 export default async function AdminClientsPage() {
   const clients = await prisma.user.findMany({
+    where: { role: "CLIENT" },
     orderBy: { createdAt: "desc" },
     include: {
       auditRequests: true,
@@ -81,7 +92,6 @@ export default async function AdminClientsPage() {
                     </p>
                   </div>
                 </div>
-
                 <div className="grid gap-3 text-sm text-neutral-300 md:grid-cols-3 md:text-right">
                   <div>
                     <p className="text-neutral-500">Rôle</p>
@@ -101,19 +111,19 @@ export default async function AdminClientsPage() {
                     <p>{client.auditRequests.length}</p>
                   </div>
 
+                  <form action={deleteClient}>
+                    <input type="hidden" name="id" value={client.id} />
+
+                    <button className="rounded-full bg-red-600 px-4 py-2 text-xs text-white">
+                      Supprimer
+                    </button>
+                  </form>
+
                   <div>
                     <p className="text-neutral-500">Inscrit le</p>
                     <p>{client.createdAt.toLocaleDateString("fr-FR")}</p>
                   </div>
                 </div>
-                <form action={deleteClient}>
-                  <input type="hidden" name="id" value={client.id} />
-
-                  <button className="rounded-full bg-red-600 px-4 py-2 text-xs text-white">
-                    Supprimer
-                  </button>
-                </form>
-
               </div>
             ))}
           </div>

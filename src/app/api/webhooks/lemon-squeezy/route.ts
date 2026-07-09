@@ -1,4 +1,3 @@
-// src/app/api/webhooks/lemon-squeezy/route.ts
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "src/lib/prisma";

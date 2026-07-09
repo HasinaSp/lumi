@@ -1,7 +1,8 @@
-// src/app/api/checkout/route.ts
 import { NextResponse } from "next/server";
 import { auth } from "src/lib/auth";
+import { rateLimit } from "src/lib/rate-limit";
 import { prisma } from "src/lib/prisma";
+import { checkoutSchema } from "src/lib/validations";
 
 function getVariantId(offer: string) {
   if (offer === "COMPLETE") return process.env.LEMONSQUEEZY_VARIANT_COMPLETE!;
@@ -16,6 +17,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const key = session?.user?.email ?? "anonymous";
+
+  if (!rateLimit(key, 5, 60_000)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const user = await prisma.user.findUnique({
     where: { email: session.user.email.toLowerCase() },
   });
@@ -24,8 +31,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const body = await req.json();
-  const offer = body.offer ?? "SIMPLE";
+  const requestBody = await req.json();
+  const parsed = checkoutSchema.safeParse(requestBody);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Données invalides" },
+      { status: 400 }
+    );
+  }
+
+  const body = parsed.data;
+  const offer = body.offer;
   const variantId = getVariantId(offer);
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
