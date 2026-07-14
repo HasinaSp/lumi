@@ -4,28 +4,39 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { prisma } from "src/lib/prisma";
 import { requireAdmin } from "src/lib/admin";
+import ConfirmDeleteForm from "src/components/admin/ConfirmDeleteForm";
 
 async function deleteClient(formData: FormData) {
   "use server";
 
   const session = await requireAdmin();
-  
-  const id = String(formData.get("id"));
+  const id = String(formData.get("id") ?? "");
+
+  if (!id) {
+    throw new Error("Identifiant du client manquant.");
+  }
 
   if (id === session.user.id) {
-    throw new Error("Vous ne pouvez pas supprimer votre propre compte.");
+    throw new Error(
+      "Vous ne pouvez pas supprimer votre propre compte administrateur."
+    );
   }
 
-  const userToDelete = await prisma.user.findUnique({
+  const client = await prisma.user.findUnique({
     where: { id },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+    },
   });
 
-  if (!userToDelete) {
-    throw new Error("Utilisateur introuvable.");
+  if (!client) {
+    throw new Error("Client introuvable.");
   }
 
-  if (userToDelete.role === "ADMIN") {
-    throw new Error("Impossible de supprimer un compte administrateur.");
+  if (client.role === "ADMIN") {
+    throw new Error("Un compte administrateur ne peut pas être supprimé ici.");
   }
 
   await prisma.user.delete({
@@ -111,14 +122,14 @@ export default async function AdminClientsPage() {
                     <p>{client.auditRequests.length}</p>
                   </div>
 
-                  <form action={deleteClient}>
-                    <input type="hidden" name="id" value={client.id} />
-
-                    <button className="rounded-full bg-red-600 px-4 py-2 text-xs text-white">
-                      Supprimer
-                    </button>
-                  </form>
-
+                  <ConfirmDeleteForm
+                    id={client.id}
+                    action={deleteClient}
+                    buttonLabel="Supprimer le client"
+                    title="Supprimer ce client ?"
+                    description={`Le compte ${client.email}, ses audits et ses paiements associés seront définitivement supprimés.`}
+                  />
+                  
                   <div>
                     <p className="text-neutral-500">Inscrit le</p>
                     <p>{client.createdAt.toLocaleDateString("fr-FR")}</p>
