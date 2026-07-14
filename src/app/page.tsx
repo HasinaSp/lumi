@@ -42,7 +42,7 @@ const foodImages = [
 const plans = [
   {
     name: "Audit Simple",
-    price: "Gratuite",
+    price: "12€",
     href: "/audit/new?offer=SIMPLE",
     badge: "Idéal pour commencer",
     description:

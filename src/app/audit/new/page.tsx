@@ -31,7 +31,7 @@ function getOfferLabel(offer: "SIMPLE" | "COMPLETE" | "MONTHLY") {
       return "Accompagnement Mensuel — 199 €/mois";
 
     default:
-      return "Audit Simple — 29 €";
+      return "Audit Simple — 12 €";
   }
 }
 
