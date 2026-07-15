@@ -1,7 +1,8 @@
 export const dynamic = "force-dynamic";
 
-import { redirect } from "next/navigation";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+
 import { prisma } from "src/lib/prisma";
 import { requireAdmin } from "src/lib/admin";
 import ConfirmDeleteForm from "src/components/admin/ConfirmDeleteForm";
@@ -26,7 +27,6 @@ async function deleteClient(formData: FormData) {
     where: { id },
     select: {
       id: true,
-      email: true,
       role: true,
     },
   });
@@ -36,7 +36,9 @@ async function deleteClient(formData: FormData) {
   }
 
   if (client.role === "ADMIN") {
-    throw new Error("Un compte administrateur ne peut pas être supprimé ici.");
+    throw new Error(
+      "Un compte administrateur ne peut pas être supprimé ici."
+    );
   }
 
   await prisma.user.delete({
@@ -47,9 +49,15 @@ async function deleteClient(formData: FormData) {
 }
 
 export default async function AdminClientsPage() {
+  await requireAdmin();
+
   const clients = await prisma.user.findMany({
-    where: { role: "CLIENT" },
-    orderBy: { createdAt: "desc" },
+    where: {
+      role: "CLIENT",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       auditRequests: true,
       payments: true,
@@ -73,70 +81,90 @@ export default async function AdminClientsPage() {
           </p>
         ) : (
           <div className="space-y-4">
-            {clients.map((client) => (
-              <div
-                key={client.id}
-                className="flex flex-col gap-4 rounded-2xl border border-white/10 p-5 md:flex-row md:items-center md:justify-between"
-              >
-                <div className="flex items-center gap-4">
-                  {client.image ? (
-                    <Image
-                      src={client.image}
-                      alt={client.name ?? client.email}
-                      width={48}
-                      height={48}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-sm">
-                      {client.email.charAt(0).toUpperCase()}
+            {clients.map((client) => {
+              const totalPaid = client.payments.reduce(
+                (sum, payment) => sum + payment.amount,
+                0
+              );
+
+              const currency =
+                client.payments[0]?.currency?.toUpperCase() ?? "EUR";
+
+              return (
+                <div
+                  key={client.id}
+                  className="rounded-2xl border border-white/10 p-5"
+                >
+                  <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-center gap-4">
+                      {client.image ? (
+                        <Image
+                          src={client.image}
+                          alt={client.name ?? client.email}
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-medium">
+                          {client.email.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+
+                      <div>
+                        <h2 className="font-medium">
+                          {client.name ?? "Client sans nom"}
+                        </h2>
+
+                        <p className="text-sm text-neutral-400">
+                          {client.email}
+                        </p>
+                      </div>
                     </div>
-                  )}
 
-                  <div>
-                    <h2 className="font-medium">
-                      {client.name ?? "Client sans nom"}
-                    </h2>
+                    <div className="grid gap-5 text-sm text-neutral-300 sm:grid-cols-2 lg:grid-cols-4">
+                      <div>
+                        <p className="text-neutral-500">Paiements</p>
+                        <p className="mt-1">
+                          {client.payments.length}
+                        </p>
+                      </div>
 
-                    <p className="text-sm text-neutral-400">
-                      {client.email}
-                    </p>
+                      <div>
+                        <p className="text-neutral-500">Montant total</p>
+                        <p className="mt-1">
+                          {(totalPaid / 100).toFixed(2)} {currency}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-neutral-500">Audits</p>
+                        <p className="mt-1">
+                          {client.auditRequests.length}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-neutral-500">Inscrit le</p>
+                        <p className="mt-1">
+                          {client.createdAt.toLocaleDateString("fr-FR")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 flex justify-end border-t border-white/10 pt-5">
+                    <ConfirmDeleteForm
+                      id={client.id}
+                      action={deleteClient}
+                      buttonLabel="Supprimer le client"
+                      title="Supprimer ce client ?"
+                      description={`Le compte ${client.email}, ses audits et ses paiements associés seront définitivement supprimés.`}
+                    />
                   </div>
                 </div>
-                <div className="grid gap-3 text-sm text-neutral-300 md:grid-cols-3 md:text-right">
-                  <div>
-                    <p className="text-neutral-500">Rôle</p>
-                    <p>{client.role}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-neutral-500">Paiements</p>
-                    <p>{client.payments.length} Paiement(s)</p>
-                    <p>
-                      {(client.payments.reduce((sum, p) => sum + p.amount, 0) / 100).toFixed(2)}€
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-neutral-500">Audits</p>
-                    <p>{client.auditRequests.length}</p>
-                  </div>
-
-                  <ConfirmDeleteForm
-                    id={client.id}
-                    action={deleteClient}
-                    buttonLabel="Supprimer le client"
-                    title="Supprimer ce client ?"
-                    description={`Le compte ${client.email}, ses audits et ses paiements associés seront définitivement supprimés.`}
-                  />
-                  
-                  <div>
-                    <p className="text-neutral-500">Inscrit le</p>
-                    <p>{client.createdAt.toLocaleDateString("fr-FR")}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
