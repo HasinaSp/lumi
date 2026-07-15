@@ -41,59 +41,65 @@ const foodImages = [
 ];
 const plans = [
   {
-    name: "Audit Simple",
-    price: "12€",
+    name: "Audit Découverte",
+    price: "Gratuit",
     href: "/audit/new?offer=SIMPLE",
-    badge: "Idéal pour commencer",
+    badge: "Offre de lancement",
+    cta: "Commencer gratuitement",
+    highlighted: false,
     description:
-      "Un diagnostic rapide de votre fiche UberEats ou Deliveroo avec les points prioritaires à corriger.",
+      "Découvrez les principaux points à améliorer sur votre fiche Uber Eats ou Deliveroo, sans engagement.",
     features: [
       "Score global /100",
-      "Analyse des photos",
+      "Analyse rapide des photos",
       "Analyse des descriptions",
       "Vérification des prix",
-      "Note client & visibilité",
+      "Analyse de la visibilité",
       "3 recommandations prioritaires",
-      "Rapport PDF synthétique",
+      "Rapport consultable en ligne",
     ],
   },
   {
     name: "Audit Complet",
-    price: "79€",
+    price: "70 €",
     href: "/audit/new?offer=COMPLETE",
     badge: "Le plus recommandé",
+    cta: "Choisir l’audit complet",
+    highlighted: true,
     description:
-      "Une analyse détaillée de votre présence sur UberEats ou Deliveroo avec comparaison concurrentielle.",
+      "Une analyse approfondie de votre présence sur Uber Eats ou Deliveroo avec des recommandations détaillées.",
     features: [
       "Score global détaillé /100",
-      "Qualité des photos",
-      "Descriptions & menu engineering",
-      "Prix vs concurrence locale",
-      "Temps de préparation",
+      "Analyse complète et optimisation des photos",
+      "Descriptions et organisation du menu",
+      "Prix face à la concurrence locale",
       "Analyse des notes clients",
-      "Visibilité & positionnement",
-      "Rapport PDF professionnel",
+      "Visibilité et positionnement",
+      "Plan d’action priorisé",
+      "Rapport professionnel en ligne",
     ],
   },
   {
     name: "Accompagnement",
-    price: "199€/mois",
+    price: "200 €/mois",
     href: "/audit/new?offer=MONTHLY",
     badge: "Croissance continue",
+    cta: "Démarrer l’accompagnement",
+    highlighted: false,
     description:
-      "Un suivi mensuel pour améliorer vos performances, tester des optimisations et suivre vos résultats.",
+      "Un suivi mensuel pour améliorer vos performances et suivre les résultats des optimisations.",
     features: [
-      "Audit mensuel UberEats / Deliveroo",
+      "Audit mensuel Uber Eats / Deliveroo",
       "Suivi du score LUMI",
       "Optimisation continue du menu",
-      "Recommandations prix & offres",
-      "Conseils photos & descriptions",
-      "Suivi concurrence",
-      "Compte-rendu PDF mensuel",
+      "Recommandations sur les prix et offres",
+      "Conseils photos et descriptions",
+      "Suivi de la concurrence",
+      "Rapport mensuel en ligne",
       "Support prioritaire",
     ],
   },
-];  
+]; 
 
 export default function Home() {
   return (
