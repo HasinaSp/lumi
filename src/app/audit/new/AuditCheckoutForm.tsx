@@ -20,7 +20,12 @@ export default function AuditCheckoutForm({
 
     const formData = new FormData(event.currentTarget);
 
-    const response = await fetch("/api/checkout", {
+    const endpoint =
+      selectedOffer === "SIMPLE"
+        ? "/api/audits/free"
+        : "/api/checkout";
+
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,13 +42,24 @@ export default function AuditCheckoutForm({
 
     const data = await response.json();
 
-    if (!response.ok || !data.url) {
-      alert(data.error ?? "Erreur lors de la création du paiement.");
+    if (!response.ok) {
+      alert(data.error ?? "Une erreur est survenue.");
       setLoading(false);
       return;
     }
 
-    window.location.href = data.url;
+    if (selectedOffer === "SIMPLE") {
+      window.location.href = "/dashboard";
+      return;
+    }
+
+    if (data.url) {
+      window.location.href = data.url;
+      return;
+    }
+
+    alert("Impossible de démarrer le paiement.");
+    setLoading(false);
   }
 
   return (
@@ -95,7 +111,11 @@ export default function AuditCheckoutForm({
         disabled={loading}
         className="w-full rounded-full bg-black px-6 py-4 text-sm uppercase tracking-widest text-white disabled:opacity-50"
       >
-        {loading ? "Redirection..." : "Continuer vers le paiement"}
+        {loading
+          ? "Traitement..."
+          : selectedOffer === "SIMPLE"
+            ? "Envoyer ma demande gratuite"
+            : "Continuer vers le paiement"}
       </button>
     </form>
   );

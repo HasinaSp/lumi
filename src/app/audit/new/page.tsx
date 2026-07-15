@@ -25,13 +25,13 @@ function getSelectedOffer(offer?: string): "SIMPLE" | "COMPLETE" | "MONTHLY" {
 function getOfferLabel(offer: "SIMPLE" | "COMPLETE" | "MONTHLY") {
   switch (offer) {
     case "COMPLETE":
-      return "Audit Complet — 79 €";
+      return "Audit Complet — 80 €";
 
     case "MONTHLY":
-      return "Accompagnement Mensuel — 199 €/mois";
+      return "Accompagnement Mensuel — 200 €/mois";
 
     default:
-      return "Audit Simple — 12 €";
+      return "Audit Découverte";
   }
 }
 

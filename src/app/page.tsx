@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "../components/navbar";
-
+import LanguageSwitcher from "src/components/LanguageSwitcher";
+import { getDictionary } from "src/lib/locale";
 
 const services = [
   "Audit UberEats",
@@ -101,10 +102,15 @@ const plans = [
   },
 ]; 
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+export default async function Home() {
+  const { locale, dictionary:t } = await getDictionary();
   return (
     <main className="min-h-screen bg-[#f8f7f3] text-neutral-950 transition-colors dark:bg-black dark:text-white">
-      <Navbar />
+      <Navbar
+        locale={locale}
+        labels={t.navbar}
+      />
       <section className="mx-auto grid min-h-[80vh] max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-2">
         <div>
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-neutral-500 dark:text-neutral-400">
@@ -112,13 +118,11 @@ export default function Home() {
           </p>
 
           <h1 className="text-5xl font-semibold leading-tight md:text-7xl">
-            Boostez la visibilité de votre restaurant.
+            {t.landing.heroTitle}
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-8 text-neutral-600 dark:text-neutral-400">
-            LUMI revèle le potentiel caché des restaurateurs et les aide à améliorer leurs ventes, leur image et
-            leur présence digitale grâce à des audits, optimisations et outils
-            simples à mettre en place, pour rayonner.
+            {t.landing.heroDescription}
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -126,14 +130,14 @@ export default function Home() {
               href="#offres"
               className="rounded-full bg-gray-500 px-8 py-4 text-center text-sm uppercase tracking-widest text-white transition hover:opacity-90 dark:bg-white dark:text-black"
             >
-              Demander un audit
+              {t.landing.requestAudit}
             </Link>
 
             <a
               href="#services"
               className="rounded-full border border-neutral-300 px-8 py-4 text-center text-sm uppercase tracking-widest transition hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
             >
-              Voir les services
+              {t.landing.viewServices}
             </a>
           </div>
         </div>
@@ -313,14 +317,23 @@ export default function Home() {
           photos, descriptions, prix, concurrence, visibilité, avis clients et
           recommandations concrètes.
         </p>
-
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {plans.map((plan) => (
-            <div
+            <article
               key={plan.name}
-              className="relative rounded-3xl bg-white p-8 shadow-sm dark:bg-neutral-900"
+              className={`relative flex flex-col rounded-[2rem] p-8 shadow-sm ${
+                plan.highlighted
+                  ? "bg-neutral-950 text-white ring-2 ring-neutral-950 dark:bg-white dark:text-black dark:ring-white"
+                  : "bg-white dark:bg-neutral-900"
+              }`}
             >
-              <span className="rounded-full bg-blue-100 px-4 py-2 text-xs font-medium uppercase tracking-widest text-blue-700">
+              <span
+                className={`w-fit rounded-full px-4 py-2 text-xs font-medium uppercase tracking-widest ${
+                  plan.highlighted
+                    ? "bg-white/10 text-white dark:bg-black/10 dark:text-black"
+                    : "bg-emerald-100 text-emerald-700"
+                }`}
+              >
                 {plan.badge}
               </span>
 
@@ -328,25 +341,43 @@ export default function Home() {
 
               <p className="mt-4 text-4xl font-bold">{plan.price}</p>
 
-              <p className="mt-4 text-neutral-600 dark:text-neutral-400">
+              <p
+                className={`mt-4 leading-7 ${
+                  plan.highlighted
+                    ? "text-neutral-300 dark:text-neutral-600"
+                    : "text-neutral-600 dark:text-neutral-400"
+                }`}
+              >
                 {plan.description}
               </p>
 
-              <ul className="mt-8 space-y-3">
+              <ul className="mt-8 flex-1 space-y-3">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="text-neutral-700 dark:text-neutral-300">
-                    ✓ {feature}
+                  <li
+                    key={feature}
+                    className={
+                      plan.highlighted
+                        ? "text-neutral-200 dark:text-neutral-700"
+                        : "text-neutral-700 dark:text-neutral-300"
+                    }
+                  >
+                    <span className="mr-2 text-emerald-500">✓</span>
+                    {feature}
                   </li>
                 ))}
               </ul>
 
               <Link
                 href={plan.href}
-                className="mt-8 inline-block rounded-full bg-gray-500 px-6 py-3 text-sm uppercase tracking-widest text-white dark:bg-white dark:text-black"
+                className={`mt-8 block rounded-full px-6 py-4 text-center text-sm font-medium uppercase tracking-widest transition ${
+                  plan.highlighted
+                    ? "bg-white text-black hover:bg-neutral-200 dark:bg-black dark:text-white dark:hover:bg-neutral-800"
+                    : "bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black"
+                }`}
               >
-                Demander cette offre
+                {plan.cta}
               </Link>
-            </div>
+            </article>
           ))}
         </div>
       </section>
@@ -371,6 +402,10 @@ export default function Home() {
           Contacter LUMI
         </a>
       </section>
+      <div className="mb-6 flex flex-wrap justify-center gap-5 text-sm text-neutral-500">
+          <Link href="/terms">Conditions d’utilisation</Link>
+          <Link href="/privacy">Confidentialité</Link>
+      </div>
     </main>
   );
 }
