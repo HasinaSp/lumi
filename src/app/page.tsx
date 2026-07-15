@@ -61,7 +61,7 @@ const plans = [
   },
   {
     name: "Audit Complet",
-    price: "70 €",
+    price: "80 €",
     href: "/audit/new?offer=COMPLETE",
     badge: "Le plus recommandé",
     cta: "Choisir l’audit complet",
